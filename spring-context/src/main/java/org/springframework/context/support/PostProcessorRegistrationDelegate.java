@@ -92,6 +92,7 @@ final class PostProcessorRegistrationDelegate {
 			}
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
+			// TODO 扫描所有类, 构建 BeanDefinition 存入 beanFactory.beanDefinitionMap 中
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			currentRegistryProcessors.clear();
 
@@ -127,6 +128,8 @@ final class PostProcessorRegistrationDelegate {
 			}
 
 			// Now, invoke the postProcessBeanFactory callback of all processors handled so far.
+			// TODO 对于 @Configuration 注解标记的类, 此处会将原本的类改为代理类
+			//  e.g com.noload.spring.configuration.TestConfiguration -> com.noload.spring.configuration.TestConfiguration$$EnhancerBySpringCGLIB
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}

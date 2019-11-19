@@ -239,6 +239,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 		this.registriesPostProcessed.add(registryId);
 
+		// TODO 校验当前类是否存在 @Configuration 注解, 如果是, 把 key: org.springframework.context.annotation.configuration, value: full
+		//  存入 beanDefinition.attributes 中
 		processConfigBeanDefinitions(registry);
 	}
 
@@ -381,6 +383,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Map<String, AbstractBeanDefinition> configBeanDefs = new LinkedHashMap<>();
 		for (String beanName : beanFactory.getBeanDefinitionNames()) {
 			BeanDefinition beanDef = beanFactory.getBeanDefinition(beanName);
+			// TODO 判定是否包含 org.springframework.context.annotation.Configuration 注解
 			Object configClassAttr = beanDef.getAttribute(ConfigurationClassUtils.CONFIGURATION_CLASS_ATTRIBUTE);
 			MethodMetadata methodMetadata = null;
 			if (beanDef instanceof AnnotatedBeanDefinition) {
@@ -426,6 +429,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			beanDef.setAttribute(AutoProxyUtils.PRESERVE_TARGET_CLASS_ATTRIBUTE, Boolean.TRUE);
 			// Set enhanced subclass of the user-specified bean class
 			Class<?> configClass = beanDef.getBeanClass();
+			// TODO 执行增强
 			Class<?> enhancedClass = enhancer.enhance(configClass, this.beanClassLoader);
 			if (configClass != enhancedClass) {
 				if (logger.isTraceEnabled()) {
