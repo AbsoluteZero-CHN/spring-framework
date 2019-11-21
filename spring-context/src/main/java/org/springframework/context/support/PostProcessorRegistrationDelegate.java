@@ -90,13 +90,18 @@ final class PostProcessorRegistrationDelegate {
 					processedBeans.add(ppName);
 				}
 			}
+			// TODO 看源码排序应该和 @Order 有关 @see org.springframework.core.annotation.OrderUtils#findOrder
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
-			// TODO 扫描所有类, 构建 BeanDefinition 存入 beanFactory.beanDefinitionMap 中
+			// TODO 此方法的作用是调用后置处理器扫描所有类, 构建 BeanDefinition 存入 beanFactory.beanDefinitionMap 中
+			//  但第一次调用此方法的时候只会有一个 ConfigurationClassPostProcessor 对象, 这个对象其中一个作用就是自动扫描
+			//  所有 `BeanDefinitionRegistryPostProcessor` 后置处理器, 然后注册进去.
+			//  另一方面 @ComponentScan 或 <context:annotation-config/> 两种配置自动注入也是通过此处理器自动注入的
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			currentRegistryProcessors.clear();
 
 			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
+			// TODO 第二次循环调用后置处理器是用于匹配所有实现了 @see org.springframework.core.Ordered 的后置处理器, 估计可以通过实现这个来实现优先调用
 			postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
 				if (!processedBeans.contains(ppName) && beanFactory.isTypeMatch(ppName, Ordered.class)) {
@@ -106,6 +111,7 @@ final class PostProcessorRegistrationDelegate {
 			}
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
+			// TODO 调用后置处理器
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			currentRegistryProcessors.clear();
 
@@ -123,6 +129,7 @@ final class PostProcessorRegistrationDelegate {
 				}
 				sortPostProcessors(currentRegistryProcessors, beanFactory);
 				registryProcessors.addAll(currentRegistryProcessors);
+				// TODO 调用后置处理器, 执行所有后置处理器, 比如我自己的 @see com.noload.spring.expand.CaohaoExpandBeanFactoryPostProcessor
 				invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 				currentRegistryProcessors.clear();
 			}
