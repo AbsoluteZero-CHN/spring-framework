@@ -4,7 +4,7 @@ package com.noload.spring.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration("customBeanName")
 public class TestConfiguration {
 
 	@Bean

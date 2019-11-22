@@ -93,6 +93,7 @@ class ComponentScanAnnotationParser {
 
 		scanner.setResourcePattern(componentScan.getString("resourcePattern"));
 
+		// TODO 对 @ComponentScan.includeFilters 的支持, 对自定义注解也支持
 		for (AnnotationAttributes filter : componentScan.getAnnotationArray("includeFilters")) {
 			for (TypeFilter typeFilter : typeFiltersFor(filter)) {
 				scanner.addIncludeFilter(typeFilter);
@@ -125,6 +126,7 @@ class ComponentScanAnnotationParser {
 
 		scanner.addExcludeFilter(new AbstractTypeHierarchyTraversingFilter(false, false) {
 			@Override
+			// TODO 不扫描自己
 			protected boolean matchClassName(String className) {
 				return declaringClass.equals(className);
 			}
