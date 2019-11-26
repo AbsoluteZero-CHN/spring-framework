@@ -605,7 +605,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			// TODO 填充 bean 实例中自动装配的对象, 里面会进行第五次和第六次后置处理器的调用
 			populateBean(beanName, mbd, instanceWrapper);
-			// TODO 初始化 spring, 里面会进行第七次次和第八次后置处理器的调用
+			// TODO 初始化 spring, 里面会进行第七次和第八次后置处理器的调用
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {
@@ -1323,6 +1323,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 						getAccessControlContext());
 			}
 			else {
+				// TODO getInstantiationStrategy 方法返回当前对象的实例化策略 InstantiationStrategy 的子类, 如果是切面, 则返回的是 CglibSubclassingInstantiationStrategy
 				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, parent);
 			}
 			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
@@ -1368,7 +1369,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	protected BeanWrapper autowireConstructor(
 			String beanName, RootBeanDefinition mbd, @Nullable Constructor<?>[] ctors, @Nullable Object[] explicitArgs) {
-
+		// TODO 解析构造器中的参数, 如果是基础数据类型, 则装配默认值, 如果是 bean 则获取对应的 bean 装配进去
 		return new ConstructorResolver(this).autowireConstructor(beanName, mbd, ctors, explicitArgs);
 	}
 
