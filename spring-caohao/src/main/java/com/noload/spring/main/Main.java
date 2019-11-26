@@ -9,6 +9,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
-		ac.getBean(IndexService.class).getUserService();
+		IndexService bean = ac.getBean(IndexService.class);
+		bean.getUserService();
 	}
 }
