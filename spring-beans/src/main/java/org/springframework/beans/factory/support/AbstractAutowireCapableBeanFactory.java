@@ -596,7 +596,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				logger.trace("Eagerly caching bean '" + beanName +
 						"' to allow for resolving potential circular references");
 			}
-			// TODO 第四次调用后置处理
+			// TODO 第四次调用后置处理, 如果目标 bean 是一个切面,
+			//  会调用 AnnotationAwareAspectJAutoProxyCreator 后置处理器来生成代理对象 (调用 AbstractAutoProxyCreator#getEarlyBeanReference 方法
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
 
