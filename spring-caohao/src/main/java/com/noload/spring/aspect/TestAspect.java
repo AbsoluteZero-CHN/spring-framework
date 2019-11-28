@@ -1,6 +1,7 @@
 package com.noload.spring.aspect;
 
 
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -17,6 +18,11 @@ public class TestAspect {
 
 	@Before("pointCut()")
 	public void before() {
-		System.out.println("---------------aop---------------");
+		System.out.println("--------------- before ---------------");
+	}
+
+	@After("pointCut()")
+	public void after() {
+		System.out.println("--------------- after ---------------");
 	}
 }

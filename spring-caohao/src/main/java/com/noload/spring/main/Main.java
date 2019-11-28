@@ -11,5 +11,6 @@ public class Main {
 		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
 		IndexService bean = ac.getBean(IndexService.class);
 		bean.getUserService();
+		bean.getUserService();
 	}
 }

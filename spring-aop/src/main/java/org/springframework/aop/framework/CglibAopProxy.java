@@ -186,7 +186,9 @@ class CglibAopProxy implements AopProxy, Serializable {
 					enhancer.setUseCache(false);
 				}
 			}
+			// TODO 设置继承被代理的目标类, 所以不支持 final 类的代理
 			enhancer.setSuperclass(proxySuperClass);
+			// TODO 设置继承 org.springframework.aop.SpringProxy(空接口) 和 org.springframework.aop.framework.Advised 两个接口
 			enhancer.setInterfaces(AopProxyUtils.completeProxiedInterfaces(this.advised));
 			enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
 			enhancer.setStrategy(new ClassLoaderAwareGeneratorStrategy(classLoader));
@@ -285,6 +287,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 		boolean isStatic = this.advised.getTargetSource().isStatic();
 
 		// Choose an "aop" interceptor (used for AOP calls).
+		// TODO 生成 AOP 切面回调
 		Callback aopInterceptor = new DynamicAdvisedInterceptor(this.advised);
 
 		// Choose a "straight to target" interceptor. (used for calls that are
