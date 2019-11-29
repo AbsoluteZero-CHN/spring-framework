@@ -48,6 +48,7 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 
 	@Override
 	public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
+		// TODO config.isProxyTargetClass() 默认是 false, 在 org.springframework.aop.framework.ProxyProcessorSupport#evaluateProxyInterfaces 中执行循环过滤, 如果实现了接口, 则改成 true
 		if (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) {
 			Class<?> targetClass = config.getTargetClass();
 			if (targetClass == null) {
