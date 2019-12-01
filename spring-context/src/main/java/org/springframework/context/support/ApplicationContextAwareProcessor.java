@@ -103,6 +103,9 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 		return bean;
 	}
 
+	/**
+	 * TODO 这里提供了 Spring 对于 Bean 的功能
+	 * */
 	private void invokeAwareInterfaces(Object bean) {
 		if (bean instanceof EnvironmentAware) {
 			((EnvironmentAware) bean).setEnvironment(this.applicationContext.getEnvironment());
@@ -119,6 +122,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 		if (bean instanceof MessageSourceAware) {
 			((MessageSourceAware) bean).setMessageSource(this.applicationContext);
 		}
+		// TODO 当 Spring Bean 实现了 ApplicationContextAware 接口的时候, 这里会调用 setApplicationContext 方法, 将 Spring 上下文注入到对应的 Bean 中
 		if (bean instanceof ApplicationContextAware) {
 			((ApplicationContextAware) bean).setApplicationContext(this.applicationContext);
 		}

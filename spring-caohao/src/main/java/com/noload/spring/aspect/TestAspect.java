@@ -18,6 +18,9 @@ public class TestAspect {
 	@Pointcut("execution(* com.noload.spring.aspect.JDKDynamicProxy.execute(..))")
 	public void pointCutJDK(){}
 
+	@Pointcut("execution(* com.noload.spring.aspect.JDKSecondDynamicProxy.execute(..))")
+	public void pointCutSecondJDK(){}
+
 	@Before("pointCut()")
 	public void before() {
 		System.out.println("--------------- IndexService before ---------------");
@@ -36,5 +39,10 @@ public class TestAspect {
 	@After("pointCutJDK()")
 	public void afterJDK() {
 		System.out.println("--------------- JDKDynamicProxy after ---------------");
+	}
+
+	@Before("pointCutSecondJDK()")
+	public void beforeSecondJDK() {
+		System.out.println("--------------- JDKSecondDynamicProxy before ---------------");
 	}
 }

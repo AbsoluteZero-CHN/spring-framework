@@ -155,6 +155,9 @@ class CglibAopProxy implements AopProxy, Serializable {
 		return getProxy(null);
 	}
 
+	/**
+	 * TODO 真正产生代理的方法
+	 * */
 	@Override
 	public Object getProxy(@Nullable ClassLoader classLoader) {
 		if (logger.isTraceEnabled()) {
@@ -166,6 +169,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 			Assert.state(rootClass != null, "Target class must be available for creating a CGLIB proxy");
 
 			Class<?> proxySuperClass = rootClass;
+			// TODO 如果当前类已经被代理
 			if (rootClass.getName().contains(ClassUtils.CGLIB_CLASS_SEPARATOR)) {
 				proxySuperClass = rootClass.getSuperclass();
 				Class<?>[] additionalInterfaces = rootClass.getInterfaces();
@@ -188,7 +192,9 @@ class CglibAopProxy implements AopProxy, Serializable {
 			}
 			// TODO 设置继承被代理的目标类, 所以不支持 final 类的代理
 			enhancer.setSuperclass(proxySuperClass);
-			// TODO 设置继承 org.springframework.aop.SpringProxy(空接口) 和 org.springframework.aop.framework.Advised 两个接口
+			// TODO 设置继承 org.springframework.aop.SpringProxy(空接口, 用于标识是 Spring 生成的代理对象)
+			//  和 org.springframework.aop.framework.Advised 两个接口(用于封装生成代理对象所需要的所有信息)
+			//  DecoratingProxy 用于返回 targetClass
 			enhancer.setInterfaces(AopProxyUtils.completeProxiedInterfaces(this.advised));
 			enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
 			enhancer.setStrategy(new ClassLoaderAwareGeneratorStrategy(classLoader));
@@ -287,7 +293,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 		boolean isStatic = this.advised.getTargetSource().isStatic();
 
 		// Choose an "aop" interceptor (used for AOP calls).
-		// TODO 生成 AOP 切面回调
+		// TODO 生成 AOP 切面回调, 实际被代理方法的执行逻辑就是基于此来执行的
 		Callback aopInterceptor = new DynamicAdvisedInterceptor(this.advised);
 
 		// Choose a "straight to target" interceptor. (used for calls that are
@@ -310,11 +316,16 @@ class CglibAopProxy implements AopProxy, Serializable {
 				new StaticDispatcher(this.advised.getTargetSource().getTarget()) : new SerializableNoOp());
 
 		Callback[] mainCallbacks = new Callback[] {
+				// TODO 用户自己定义的切面生成的拦截器
 				aopInterceptor,  // for normal advice
+				// TODO 根据条件是否暴露代理对象的拦截器
 				targetInterceptor,  // invoke target without considering advice, if optimized
+				// TODO 序列化不做任何操作
 				new SerializableNoOp(),  // no override for methods mapped to this
 				targetDispatcher, this.advisedDispatcher,
+				// TODO equals 方法的拦截器
 				new EqualsInterceptor(this.advised),
+				// TODO hashCode 方法的拦截器
 				new HashCodeInterceptor(this.advised)
 		};
 
@@ -669,6 +680,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 			try {
 				if (this.advised.exposeProxy) {
 					// Make invocation available if necessary.
+					// TODO 如果配置了暴露代理对象, 则把当前代理对象放入 ThreadLocal 中
 					oldProxy = AopContext.setCurrentProxy(proxy);
 					setProxyContext = true;
 				}

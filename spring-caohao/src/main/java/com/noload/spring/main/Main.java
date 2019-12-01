@@ -3,6 +3,7 @@ package com.noload.spring.main;
 
 import com.noload.spring.AppConfig;
 import com.noload.spring.aspect.JDKDynamicProxyInterface;
+import com.noload.spring.aspect.JDKSecondDynamicProxyInterface;
 import com.noload.spring.cycle.IndexService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -13,6 +14,8 @@ public class Main {
 		IndexService indexService = ac.getBean(IndexService.class);
 		indexService.getUserService();
 		JDKDynamicProxyInterface jdkDynamicProxy = ac.getBean(JDKDynamicProxyInterface.class);
+		JDKSecondDynamicProxyInterface jdkSecondDynamicProxyInterface = ac.getBean(JDKSecondDynamicProxyInterface.class);
 		jdkDynamicProxy.execute();
+		jdkSecondDynamicProxyInterface.execute();
 	}
 }
