@@ -185,7 +185,7 @@ class ConfigurationClassParser {
 						"Failed to parse configuration class [" + bd.getBeanClassName() + "]", ex);
 			}
 		}
-
+		// TODO 延迟 @ImportSelector 执行
 		this.deferredImportSelectorHandler.process();
 	}
 
@@ -303,9 +303,11 @@ class ConfigurationClassParser {
 		}
 
 		// Process any @Import annotations
+		// TODO 处理所有 @Import 注解
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
 		// Process any @ImportResource annotations
+		// TODO 处理所有 @ImportResource 注解
 		AnnotationAttributes importResource =
 				AnnotationConfigUtils.attributesFor(sourceClass.getMetadata(), ImportResource.class);
 		if (importResource != null) {

@@ -283,6 +283,7 @@ public class AnnotatedBeanDefinitionReader {
 			}
 		}
 
+		// TODO 只是用来封装 beanDefinition 和 beanName 的
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
 		// TODO ??? spring-web-mvc部分
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);

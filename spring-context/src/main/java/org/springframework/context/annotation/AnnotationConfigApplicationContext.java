@@ -65,6 +65,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	public AnnotationConfigApplicationContext() {
 		// TODO reader 用于读取 BeanDefinition
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
