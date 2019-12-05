@@ -66,6 +66,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		// TODO reader 用于读取 BeanDefinition
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		// TODO 没什么卵用, 只是用来对外提供继续扫描的, Spring 自己的扫描不是用这个
+		//  实际 Spring 使用的是 org.springframework.context.annotation.ConfigurationClassParser.componentScanParser 这个对象
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 

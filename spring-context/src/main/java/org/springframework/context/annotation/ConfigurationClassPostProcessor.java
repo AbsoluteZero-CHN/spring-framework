@@ -241,6 +241,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 		// TODO 校验当前类是否存在 @Configuration 注解, 如果是, 把 key: org.springframework.context.annotation.configuration, value: full
 		//  存入 beanDefinition.attributes 中
+		//  此外, 更为重要的两点是这里进行了 Spring class 的扫描和 @Import @ImportSelector @ImportResource 注解的处理
 		processConfigBeanDefinitions(registry);
 	}
 
