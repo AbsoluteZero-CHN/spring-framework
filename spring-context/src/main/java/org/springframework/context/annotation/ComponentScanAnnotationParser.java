@@ -107,6 +107,8 @@ class ComponentScanAnnotationParser {
 			}
 		}
 
+		// TODO @ComponentScan 里面有个 lazyInit 属性, 如果配置了 true, 就把 BeanDefinitionDefaults 设置为 true,
+		//  因为扫描当前配置的所有包下面的类生成的 BeanDefinition 都是 copyOf BeanDefinitionDefaults, 所以默认都是 true
 		boolean lazyInit = componentScan.getBoolean("lazyInit");
 		if (lazyInit) {
 			scanner.getBeanDefinitionDefaults().setLazyInit(true);

@@ -223,7 +223,7 @@ class ConfigurationClassParser {
 			return;
 		}
 
-		// TODO 判断这个类 (AppConfig) 有没有被其他类 @Import
+		// TODO 判断这个类 (AppConfig) 有没有被其他类 @Import, 对于 @Import 标注的类也会进这里
 		ConfigurationClass existingClass = this.configurationClasses.get(configClass);
 		if (existingClass != null) {
 			if (configClass.isImported()) {
@@ -575,6 +575,7 @@ class ConfigurationClassParser {
 						else {
 							String[] importClassNames = selector.selectImports(currentSourceClass.getMetadata());
 							Collection<SourceClass> importSourceClasses = asSourceClasses(importClassNames);
+							// TODO 递归调用处理 @Import 方法(当前方法), 用于解析 ImportSelector 返回的类中存在的 @Import 注解
 							processImports(configClass, currentSourceClass, importSourceClasses, false);
 						}
 					}
