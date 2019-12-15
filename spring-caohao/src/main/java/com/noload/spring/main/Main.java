@@ -2,6 +2,7 @@ package com.noload.spring.main;
 
 
 import com.noload.spring.AppConfig;
+import com.noload.spring.aspect.AopService;
 import com.noload.spring.aspect.JDKDynamicProxyInterface;
 import com.noload.spring.aspect.JDKSecondDynamicProxyInterface;
 import com.noload.spring.configuration.OtherComponentTest;
@@ -20,5 +21,6 @@ public class Main {
 		JDKSecondDynamicProxyInterface jdkSecondDynamicProxyInterface = ac.getBean(JDKSecondDynamicProxyInterface.class);
 		jdkDynamicProxy.execute();
 		jdkSecondDynamicProxyInterface.execute();
+		ac.getBean(AopService.class).execute();
 	}
 }

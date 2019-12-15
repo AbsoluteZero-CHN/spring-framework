@@ -666,7 +666,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// TODO 重要, 能够在 bean 中获取 Aware 接口
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 
-		// TODO 跳过这些 Aware
+		// TODO 跳过这些 Aware ??? 为什么
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
 		beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);

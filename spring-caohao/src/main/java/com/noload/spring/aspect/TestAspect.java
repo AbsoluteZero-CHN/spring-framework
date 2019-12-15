@@ -20,6 +20,8 @@ public class TestAspect {
 
 	@Pointcut("execution(* com.noload.spring.aspect.JDKSecondDynamicProxy.execute(..))")
 	public void pointCutSecondJDK(){}
+	@Pointcut("execution(* com.noload.spring.aspect.AopService.*(..))")
+	public void pointCutAopService(){}
 
 	@Before("pointCut()")
 	public void before() {
@@ -44,5 +46,10 @@ public class TestAspect {
 	@Before("pointCutSecondJDK()")
 	public void beforeSecondJDK() {
 		System.out.println("--------------- JDKSecondDynamicProxy before ---------------");
+	}
+
+	@Before("pointCutAopService()")
+	public void beforeAop() {
+		System.out.println("--------------- AopService before ---------------");
 	}
 }

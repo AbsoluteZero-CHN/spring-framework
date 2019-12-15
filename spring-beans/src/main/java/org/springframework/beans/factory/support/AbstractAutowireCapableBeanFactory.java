@@ -506,7 +506,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
-			// TODO 用于替换默认的 bean 创建方式. 例如 AOP 通过扩展接口生成代理(第一次调用后置处理器
+			// TODO 用于替换默认的 bean 创建方式 (第一次调用后置处理器
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -589,14 +589,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// even when triggered by lifecycle interfaces like BeanFactoryAware.
 		// TODO 如果环境允许循环引用的话及早地缓存所有单例, 用于后面解决循环引用问题, 甚至 BeanFactoryAware 循环引用也可以解决
 		boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences &&
-				// TODO 如果是在填充数据的时候实例化, 此处一定为 true, 因为在实例化之初当前 bean 就已经标记为创建中了
+				// TODO 如果是在填充数据的时候实例化, 从断点调试来看, 此处始终为 true, 因为在实例化之初当前 bean 就已经标记为创建中了
 				isSingletonCurrentlyInCreation(beanName));
 		if (earlySingletonExposure) {
 			if (logger.isTraceEnabled()) {
 				logger.trace("Eagerly caching bean '" + beanName +
 						"' to allow for resolving potential circular references");
 			}
-			// TODO 第四次调用后置处理, 如果目标 bean 是一个切面,
+			// TODO 【AOP】 第四次调用后置处理器, 如果目标 bean 是一个切面,
 			//  会调用 AnnotationAwareAspectJAutoProxyCreator 后置处理器来生成代理对象 (调用 AbstractAutoProxyCreator#getEarlyBeanReference 方法
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
@@ -606,7 +606,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			// TODO 填充 bean 实例中自动装配的对象, 里面会进行第五次和第六次后置处理器的调用
 			populateBean(beanName, mbd, instanceWrapper);
-			// TODO 初始化 spring, 里面会进行第七次和第八次后置处理器的调用
+			// TODO 初始化 spring, 里面会进行第七次和第八次后置处理器的调用, 对于非循环依赖的对象, 这个方法就会返回代理对象
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {
@@ -620,7 +620,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		if (earlySingletonExposure) {
-			// TODO 对于切面类, 此处已经实例化到 earlySingletonObjects 中了, 但 singletonObjects 中并不存在
+			// TODO 对于切面类, 此处会实例化到 earlySingletonObjects 中, 但 singletonObjects 中并不存在
+			//  对于循环依赖 + 切面的 bean, 是在这个方法才返回代理对象(调用工厂方法 getEarlyBeanReference 函数设置的工厂方法
 			Object earlySingletonReference = getSingleton(beanName, false);
 			if (earlySingletonReference != null) {
 				if (exposedObject == bean) {
@@ -1821,6 +1822,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					beanName, "Invocation of init method failed", ex);
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
+			// TODO 非被循环依赖的生成 AOP 对象的入口
+			//  AnnotationAwareAspectJAutoProxyCreator
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 
