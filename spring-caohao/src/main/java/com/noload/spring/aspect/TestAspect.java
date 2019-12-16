@@ -15,6 +15,9 @@ public class TestAspect {
 	@Pointcut("execution(* com.noload.spring.cycle.IndexService.getUserService (..))")
 	public void pointCut() {}
 
+	@Pointcut("execution(* com.noload.spring.cycle.UserService.* (..))")
+	public void userPointCut(){}
+
 	@Pointcut("execution(* com.noload.spring.aspect.JDKDynamicProxy.execute(..))")
 	public void pointCutJDK(){}
 
@@ -51,5 +54,10 @@ public class TestAspect {
 	@Before("pointCutAopService()")
 	public void beforeAop() {
 		System.out.println("--------------- AopService before ---------------");
+	}
+
+	@Before("userPointCut()")
+	public void beforeUser() {
+		System.out.println("--------------- UserService before ---------------");
 	}
 }

@@ -876,6 +876,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 					}
 				}
 				else {
+					// TODO 此处实例化 bean
 					getBean(beanName);
 				}
 			}

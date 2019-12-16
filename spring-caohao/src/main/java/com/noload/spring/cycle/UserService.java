@@ -12,4 +12,8 @@ public class UserService {
 	public UserService() {
 		System.out.println("UserService 实例化完成");
 	}
+
+	public IndexService getIndexService() {
+		return indexService;
+	}
 }
