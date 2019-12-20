@@ -128,7 +128,9 @@ class ConstructorResolver {
 		BeanWrapperImpl bw = new BeanWrapperImpl();
 		this.beanFactory.initBeanWrapper(bw);
 
+		// TODO 最终决定被使用的实例化构造方法
 		Constructor<?> constructorToUse = null;
+		// TODO 决定构造方法使用哪些值
 		ArgumentsHolder argsHolderToUse = null;
 		Object[] argsToUse = null;
 
@@ -170,6 +172,7 @@ class ConstructorResolver {
 
 			if (candidates.length == 1 && explicitArgs == null && !mbd.hasConstructorArgumentValues()) {
 				Constructor<?> uniqueCandidate = candidates[0];
+				// TODO 对于空构造器
 				if (uniqueCandidate.getParameterCount() == 0) {
 					synchronized (mbd.constructorArgumentLock) {
 						mbd.resolvedConstructorOrFactoryMethod = uniqueCandidate;
@@ -185,22 +188,34 @@ class ConstructorResolver {
 			boolean autowiring = (chosenCtors != null ||
 					mbd.getResolvedAutowireMode() == AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR);
 			ConstructorArgumentValues resolvedValues = null;
-
+			// TODO 定义了一个最小参数个数
 			int minNrOfArgs;
 			if (explicitArgs != null) {
 				minNrOfArgs = explicitArgs.length;
 			}
 			else {
+				// TODO 实例化一个对象, ConstructorArgumentValues 是用来存储构造器的值的,
+				//  内部维护了一个 indexedArgumentValues 和一个 genericArgumentValues,
+				//  对于无序参数值使用 genericArgumentValues, 有序的使用 indexedArgumentValues
 				ConstructorArgumentValues cargs = mbd.getConstructorArgumentValues();
 				resolvedValues = new ConstructorArgumentValues();
+				// TODO 确定构造参数的数量
 				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
 			}
 
+			// TODO ??? 为什么要排序
 			AutowireUtils.sortConstructors(candidates);
+			// TODO 最小的类型差异变量
 			int minTypeDiffWeight = Integer.MAX_VALUE;
+			// TODO 有歧义的构造方法
 			Set<Constructor<?>> ambiguousConstructors = null;
 			LinkedList<UnsatisfiedDependencyException> causes = null;
 
+
+			/**
+			 * TODO Spring 循环所有的构造方法, 首先判定是否构造方法已经被确定, 如果已经确定了, 并且参数需要的长度	> 参数个数长度, 判定不匹配 -> break
+			 *
+			 * */
 			for (Constructor<?> candidate : candidates) {
 
 				int parameterCount = candidate.getParameterCount();
@@ -210,6 +225,7 @@ class ConstructorResolver {
 					// do not look any further, there are only less greedy constructors left.
 					break;
 				}
+				// TODO 构造方法参数列表的长度 < 最小长度 -> continue
 				if (parameterCount < minNrOfArgs) {
 					continue;
 				}

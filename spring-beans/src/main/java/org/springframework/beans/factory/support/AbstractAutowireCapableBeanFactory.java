@@ -1215,7 +1215,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Candidate constructors for autowiring?
-		// TODO 有参构造器走这里 (很难
+		// TODO 有参构造器走这里, 调用 SmartInstantiationAwareBeanPostProcessor.determineCandidateConstructors 决定使用哪个构造器
+		//   如果自己提供一个空构造器的话这里返回 null
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args)) {
@@ -1808,7 +1809,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
-			// TODO 执行生命周期回调 @PostConstruct 方法, 同时在 ApplicationContextAwareProcessor 中也执行了 Aware部分回调
+			// TODO 利用 InitDestroyAnnotationBeanPostProcessor 执行生命周期回调 @PostConstruct 方法, 同时在 ApplicationContextAwareProcessor 中也执行了 Aware部分回调
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
@@ -1870,6 +1871,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			if (System.getSecurityManager() != null) {
 				try {
 					AccessController.doPrivileged((PrivilegedExceptionAction<Object>) () -> {
+						// TODO 执行 InitializingBean 生命周期回调
 						((InitializingBean) bean).afterPropertiesSet();
 						return null;
 					}, getAccessControlContext());
@@ -1888,6 +1890,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			if (StringUtils.hasLength(initMethodName) &&
 					!(isInitializingBean && "afterPropertiesSet".equals(initMethodName)) &&
 					!mbd.isExternallyManagedInitMethod(initMethodName)) {
+				// TODO 执行 xml 中 init-method 配置的生命周期回调
 				invokeCustomInitMethod(beanName, bean, mbd);
 			}
 		}
