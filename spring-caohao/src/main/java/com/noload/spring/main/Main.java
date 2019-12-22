@@ -8,6 +8,7 @@ import com.noload.spring.aspect.JDKSecondDynamicProxyInterface;
 import com.noload.spring.configuration.OtherComponentTest;
 import com.noload.spring.cycle.IndexService;
 import com.noload.spring.cycle.UserService;
+import org.springframework.beans.factory.support.ChildBeanDefinition;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main {
@@ -25,5 +26,6 @@ public class Main {
 		jdkDynamicProxy.execute();
 		jdkSecondDynamicProxyInterface.execute();
 		ac.getBean(AopService.class).execute();
+		ac.close();
 	}
 }
