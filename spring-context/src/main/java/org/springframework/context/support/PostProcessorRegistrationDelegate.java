@@ -130,6 +130,7 @@ final class PostProcessorRegistrationDelegate {
 						reiterate = true;
 					}
 				}
+				// TODO 第三次是把所有的 BeanDefinitionRegistryPostProcessor 后置处理器都添加进来然后执行
 				sortPostProcessors(currentRegistryProcessors, beanFactory);
 				registryProcessors.addAll(currentRegistryProcessors);
 				// TODO 调用后置处理器, 执行所有后置处理器, 比如我自己的 @see com.noload.spring.expand.CaohaoExpandBeanFactoryPostProcessor
@@ -138,7 +139,7 @@ final class PostProcessorRegistrationDelegate {
 			}
 
 			// Now, invoke the postProcessBeanFactory callback of all processors handled so far.
-			// TODO 对于 @Configuration 注解标记的类, 此处会将原本的类改为代理类
+			// TODO 最后执行所有的 BeanFactoryPostProcessor 后置处理器回调. 对于 @Configuration 注解标记的类, 此处会将原本的类改为代理类
 			//  e.g com.noload.spring.configuration.TestConfiguration -> com.noload.spring.configuration.TestConfiguration$$EnhancerBySpringCGLIB
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
