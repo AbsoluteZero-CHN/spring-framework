@@ -5,14 +5,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration("customBeanName")
-public class TestConfiguration {
+public class TestConfiguration implements ForJDKTestConfiguration {
 
 	@Bean
+	@Override
 	public FirstBean firstBean() {
-		return new FirstBean(secondBean());
+		return new FirstBean();
 	}
 
-	@Bean SecondBean secondBean() {
-		return new SecondBean();
+	@Bean
+	@Override
+	public SecondBean secondBean() {
+		return new SecondBean(firstBean());
 	}
 }
