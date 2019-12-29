@@ -350,6 +350,9 @@ class ConfigurationClassEnhancer {
 				}
 			}
 
+			// TODO 对于 在@Configuration 标注的类, @Bean 标注的方法. Spring 在执行这个方法的时候会先把当前方法放入 ThreadLocal 中,
+			//  如果当前方法调用了其他方法, Spring 会对被调用的方法与 ThreadLocal 中保存的方法进行比对.
+			//  如果不是同一个方法, 则执行 Spring 自己的逻辑, 否则走被代理类的逻辑
 			if (isCurrentlyInvokedFactoryMethod(beanMethod)) {
 				// The factory is calling the bean method in order to instantiate and register the bean
 				// (i.e. via a getBean() call) -> invoke the super implementation of the method to actually
