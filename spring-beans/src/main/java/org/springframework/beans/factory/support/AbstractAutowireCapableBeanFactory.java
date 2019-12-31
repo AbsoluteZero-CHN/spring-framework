@@ -1200,6 +1200,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (args == null) {
 			synchronized (mbd.constructorArgumentLock) {
 				if (mbd.resolvedConstructorOrFactoryMethod != null) {
+					// TODO 表示这个类已经找到了实例化的方法 (原型的 bean 会是 true
 					resolved = true;
 					autowireNecessary = mbd.constructorArgumentsResolved;
 				}
@@ -1215,9 +1216,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Candidate constructors for autowiring?
-		// TODO 有参构造器走这里, 调用 SmartInstantiationAwareBeanPostProcessor.determineCandidateConstructors 决定使用哪个构造器
-		//   如果自己提供一个空构造器的话这里返回 null
+		// TODO 有参构造器走这里, 调用 SmartInstantiationAwareBeanPostProcessor.determineCandidateConstructors (唯一的实现是 AutowiredAnnotationBeanPostProcessor) 决定使用哪个构造器
+		//   只要 class 中提供了一个唯一的非空构造器, 都可以直接判定使用这个构造器, 否则无论是否提供了多个构造器或唯一的空构造器, 都返回 null
+		//   对于存在 @Autowired(required = false) 注解标注的构造方法, 这里会返回所有构造器
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
+		// TODO 当装配方式为 AUTOWIRE_CONSTRUCTOR 的时候, 这里实际执行的构造器是参数中所有参数均是 Spring Bean的那个, 并且会选择参数最多的
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args)) {
 			return autowireConstructor(beanName, mbd, ctors, args);

@@ -132,6 +132,7 @@ class ConstructorResolver {
 		Constructor<?> constructorToUse = null;
 		// TODO 决定构造方法使用哪些值
 		ArgumentsHolder argsHolderToUse = null;
+		// TODO 最终使用的参数
 		Object[] argsToUse = null;
 
 		if (explicitArgs != null) {
@@ -141,6 +142,7 @@ class ConstructorResolver {
 			Object[] argsToResolve = null;
 			synchronized (mbd.constructorArgumentLock) {
 				constructorToUse = (Constructor<?>) mbd.resolvedConstructorOrFactoryMethod;
+				// TODO 原型情况下
 				if (constructorToUse != null && mbd.constructorArgumentsResolved) {
 					// Found a cached constructor...
 					argsToUse = mbd.resolvedConstructorArguments;
@@ -150,6 +152,7 @@ class ConstructorResolver {
 				}
 			}
 			if (argsToResolve != null) {
+				// TODO Spring 对参数进行 type convert
 				argsToUse = resolvePreparedArguments(beanName, mbd, bw, constructorToUse, argsToResolve, true);
 			}
 		}
@@ -170,15 +173,16 @@ class ConstructorResolver {
 				}
 			}
 
+			// TODO 如果只有一个构造方法 && 并且没有指定参数 && 并且 BeanDefinition 中也没有传构造参数
 			if (candidates.length == 1 && explicitArgs == null && !mbd.hasConstructorArgumentValues()) {
 				Constructor<?> uniqueCandidate = candidates[0];
-				// TODO 对于空构造器
 				if (uniqueCandidate.getParameterCount() == 0) {
 					synchronized (mbd.constructorArgumentLock) {
 						mbd.resolvedConstructorOrFactoryMethod = uniqueCandidate;
 						mbd.constructorArgumentsResolved = true;
 						mbd.resolvedConstructorArguments = EMPTY_ARGS;
 					}
+					// TODO 调用默认无参构造方法
 					bw.setBeanInstance(instantiate(beanName, mbd, uniqueCandidate, EMPTY_ARGS));
 					return bw;
 				}

@@ -291,6 +291,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		}
 
 		// Quick check on the concurrent map first, with minimal locking.
+		// TODO 这个缓存的作用目前判断只在 @Configuration 中, @Bean 注解标记的方法相互调用的时候会有用
 		Constructor<?>[] candidateConstructors = this.candidateConstructorsCache.get(beanClass);
 		if (candidateConstructors == null) {
 			// Fully synchronized resolution now...
@@ -318,10 +319,12 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 						else if (primaryConstructor != null) {
 							continue;
 						}
+						// TODO 获取构造器上是否存在 @Autowired @Value 注解
 						MergedAnnotation<?> ann = findAutowiredAnnotation(candidate);
 						if (ann == null) {
 							Class<?> userClass = ClassUtils.getUserClass(beanClass);
 							if (userClass != beanClass) {
+								// TODO 内部类条件才为真
 								try {
 									Constructor<?> superCtor =
 											userClass.getDeclaredConstructor(candidate.getParameterTypes());
@@ -341,6 +344,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 							}
 							boolean required = determineRequiredStatus(ann);
 							if (required) {
+								// TODO 第一遍获取到的 @Autowired @Value 注解构造器已经放入 candidates 中, 所以如果后面依然能获取到这两个注解, 就就抛出异常
 								if (!candidates.isEmpty()) {
 									throw new BeanCreationException(beanName,
 											"Invalid autowire-marked constructors: " + candidates +
@@ -352,6 +356,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 							candidates.add(candidate);
 						}
 						else if (candidate.getParameterCount() == 0) {
+							// TODO 存储默认构造方法
 							defaultConstructor = candidate;
 						}
 					}
