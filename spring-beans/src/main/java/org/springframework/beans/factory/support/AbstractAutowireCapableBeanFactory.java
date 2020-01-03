@@ -574,7 +574,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		synchronized (mbd.postProcessingLock) {
 			if (!mbd.postProcessed) {
 				try {
-					// TODO 第三次调用后置处理器
+					// TODO 第三次调用后置处理器, 通过后置处理器来应用合并之后的 BeanDefinition
+					//  缓存了注入元素的信息
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}
 				catch (Throwable ex) {
@@ -1223,6 +1224,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// TODO 当装配方式为 AUTOWIRE_CONSTRUCTOR 的时候, 这里实际执行的构造器是参数中所有参数均是 Spring Bean的那个, 并且会选择参数最多的
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args)) {
+			// TODO 进入这个方法进行推断构造器的条件
+			//  自动装配
+			//  有且只有一个带参的构造方法
+			//  有 >0 个加了注解的 @Autowired(required = false)
+			//  提供了构造方法的值
 			return autowireConstructor(beanName, mbd, ctors, args);
 		}
 
@@ -1233,6 +1239,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// No special handling: simply use no-arg constructor.
+		// TODO 通过无参构造注入
 		return instantiateBean(beanName, mbd);
 	}
 

@@ -207,9 +207,9 @@ class ConstructorResolver {
 				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
 			}
 
-			// TODO ??? 为什么要排序
+			// TODO 排序规则: 1.public 靠前 2.参数多靠前 3.参数精准度(接口和实现类)
 			AutowireUtils.sortConstructors(candidates);
-			// TODO 最小的类型差异变量
+			// TODO 最小的类型差异数量
 			int minTypeDiffWeight = Integer.MAX_VALUE;
 			// TODO 有歧义的构造方法
 			Set<Constructor<?>> ambiguousConstructors = null;
