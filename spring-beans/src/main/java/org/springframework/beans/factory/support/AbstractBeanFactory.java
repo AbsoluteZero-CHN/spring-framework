@@ -294,6 +294,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			if (!typeCheckOnly) {
 				// TODO 如果重载方法传递的 `typeCheckOnly` 为 false, 即非类型检查标识, 则标记对象为已经创建或即将创建
+				//  对于已经 merged 的 BeanDefinition, 这里会将 BeanDefinition 标记为需要重新 merge. 注释说法是防止在此期间元数据被更改(估计是后置处理器期间)
 				markBeanAsCreated(beanName);
 			}
 
@@ -1356,7 +1357,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 								"Could not resolve parent bean definition '" + bd.getParentName() + "'", ex);
 					}
 					// Deep copy with overridden values.
+					// TODO 拷贝父类 BeanDefinition 配置
 					mbd = new RootBeanDefinition(pbd);
+					// TODO 覆盖父类的 BeanDefinition 配置
 					mbd.overrideFrom(bd);
 				}
 
