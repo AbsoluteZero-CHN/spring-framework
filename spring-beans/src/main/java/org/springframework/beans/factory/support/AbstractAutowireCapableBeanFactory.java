@@ -575,7 +575,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			if (!mbd.postProcessed) {
 				try {
 					// TODO 第三次调用后置处理器, 通过后置处理器来应用合并之后的 BeanDefinition
-					//  缓存了注入元素的信息
+					//  缓存了注入元素的信息(包括 Field Method)
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}
 				catch (Throwable ex) {
