@@ -444,6 +444,10 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		// Fall back to class name as cache key, for backwards compatibility with custom callers.
 		String cacheKey = (StringUtils.hasLength(beanName) ? beanName : clazz.getName());
 		// Quick check on the concurrent map first, with minimal locking.
+		// TODO InjectionMetadata 里存储了 InjectedElement 对象的集合.
+		//  InjectedElement 有两个实现类(AutowiredFieldElement AutowiredMethodElement)
+		//  每一个 InjectedElement 内包含一个 Member 对象,
+		//  Member 接口的实现类包含(Method Field Constructor)
 		InjectionMetadata metadata = this.injectionMetadataCache.get(cacheKey);
 		if (InjectionMetadata.needsRefresh(metadata, clazz)) {
 			synchronized (this.injectionMetadataCache) {
