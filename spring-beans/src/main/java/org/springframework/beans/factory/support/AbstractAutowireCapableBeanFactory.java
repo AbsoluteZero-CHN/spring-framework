@@ -1824,7 +1824,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
-			// TODO 利用 InitDestroyAnnotationBeanPostProcessor 执行生命周期回调 @PostConstruct 方法, 同时在 ApplicationContextAwareProcessor 中也执行了 Aware部分回调
+			// TODO 第七次后置处理器调用
+			//  利用 InitDestroyAnnotationBeanPostProcessor 执行生命周期回调 @PostConstruct 方法, 同时在 ApplicationContextAwareProcessor 中也执行了 Aware 部分回调
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
@@ -1838,7 +1839,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					beanName, "Invocation of init method failed", ex);
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
-			// TODO 非被循环依赖的生成 AOP 对象的入口
+			// TODO 第八次后置处理器调用 非被循环依赖的生成 AOP 对象的入口
 			//  AnnotationAwareAspectJAutoProxyCreator
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}

@@ -11,8 +11,8 @@ import com.noload.spring.cycle.UserService;
 import com.noload.spring.expand.ManualAddBeanDefinitionRegistryPostProcessor;
 import com.noload.spring.merge.ChildBean;
 import com.noload.spring.merge.RootBean;
+import com.noload.spring.populate.expand.DontPopulateBean;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.support.ChildBeanDefinition;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.cglib.core.DebuggingClassWriter;
@@ -46,6 +46,7 @@ public class Main {
 		jdkDynamicProxy.execute();
 		jdkSecondDynamicProxyInterface.execute();
 		ac.getBean(AopService.class).execute();
+		ac.getBean(DontPopulateBean.class).getInjectBean();
 		ac.close();
 	}
 
